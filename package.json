@@ -10,6 +10,7 @@
     "@types/node": "^16.11.27",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
+    "firebase": "^9.6.11",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1",
@@ -18,11 +19,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "serve": "cd functions && npm run serve",
     "build": "react-scripts build",
+    "build:functions": "cd functions && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "pretty": "npx pretty-quick"
+    "pretty": "npx pretty-quick",
+    "install": "react-scripts install && cd functions && npm i"
   },
   "eslintConfig": {
     "extends": [
