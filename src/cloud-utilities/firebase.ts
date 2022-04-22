@@ -6,10 +6,13 @@ import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 const firebase = initializeApp(config);
 
 const db = getFirestore(firebase);
-connectFirestoreEmulator(db, 'localhost', 8080);
 
-const functions = getFunctions(firebase);
-connectFunctionsEmulator(functions, 'localhost', 5001);
+const functions = getFunctions(firebase, 'europe-west1');
+
+if (location.hostname === 'localhost') {
+  connectFirestoreEmulator(db, 'localhost', 8080);
+  connectFunctionsEmulator(functions, 'localhost', 5001);
+}
 
 export { functions, db, firebase };
 export { httpsCallable } from 'firebase/functions';
