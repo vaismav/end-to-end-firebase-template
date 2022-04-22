@@ -1,5 +1,3 @@
-import { initializeApp, firestore } from 'firebase-admin';
-
-initializeApp();
+import { firestore } from 'firebase-admin';
 
 export const db = firestore();

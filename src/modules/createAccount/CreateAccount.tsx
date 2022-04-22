@@ -53,7 +53,13 @@ const CreateAccount = ({}): ReactElement => {
   const sendRequest = () => {
     let data: LooseObject = {};
     inputFields.forEach((field) => {
-      data[field.id] = field.value;
+      switch (field.id) {
+        case 'phoneNumber':
+          data[field.id] = '+972' + field.value.substring(1);
+          break;
+        default:
+          data[field.id] = field.value;
+      }
     });
     httpCall('CreateAccount', data);
   };
