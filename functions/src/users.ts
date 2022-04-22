@@ -53,7 +53,7 @@ export const createAccount = async (data: any, context: https.CallableContext) =
   accountDataMandatoryKeys.forEach((key) => {
     if (!data[key] || !isMandatoryDataValid(data[key], key)) {
       log(`Error: createAccount: invalid data: missing value of ${key} `, data);
-      return new HttpsError('failed-precondition', 'missing data');
+      throw new HttpsError('failed-precondition', 'missing data');
     }
   });
 
@@ -61,13 +61,13 @@ export const createAccount = async (data: any, context: https.CallableContext) =
     .then((response: AccountData) => {
       if (!response.accountID || !response.branchID) {
         log(`Error: createAccount: legacy system response missing account or branch `, response);
-        return new HttpsError('internal', 'something went wrong');
+        throw new HttpsError('internal', 'something went wrong');
       }
       return buildAccount({ ...data, ...response });
     })
     .catch((e) => {
       log('Error: createAccount: legacySystemBuildAccount()', e);
-      return new HttpsError('internal', 'something went wrong');
+      throw new HttpsError('internal', 'something went wrong');
     });
 };
 
@@ -109,12 +109,12 @@ export const buildAccount = async (data: CreatAccountData & AccountData) => {
       if (!doc.exists) {
         if (!(await createUser(data))) {
           log('buildAccount: failed to create new user');
-          return new HttpsError('aborted', ' failed to create new user');
+          throw new HttpsError('aborted', ' failed to create new user');
         }
 
         await docRef.create(getUserDataWithoutPassword(data)).catch((e) => {
           log('buildAccount: failed to create new user doc', e);
-          return new HttpsError('aborted', ' failed to create new user');
+          throw new HttpsError('aborted', ' failed to create new user');
         });
       }
       db.doc(`users/${data.identityNumber}/accounts/${data.accountID}`)
@@ -128,6 +128,6 @@ export const buildAccount = async (data: CreatAccountData & AccountData) => {
     })
     .catch((e) => {
       log('buildAccount: failed to create new user account', e);
-      return new HttpsError('internal', ' failed to create new user');
+      throw new HttpsError('internal', ' failed to create new user');
     });
 };
