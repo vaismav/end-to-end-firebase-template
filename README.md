@@ -1,3 +1,6 @@
+[![Deploy to Firebase Hosting on merge](https://github.com/vaismav/end-to-end-firebase-template/actions/workflows/firebase-hosting-merge.yml/badge.svg?branch=main)](https://github.com/vaismav/end-to-end-firebase-template/actions/workflows/firebase-hosting-merge.yml)
+[![Main - Firebase function deploy](https://github.com/vaismav/end-to-end-firebase-template/actions/workflows/functions-deploy.yml/badge.svg)](https://github.com/vaismav/end-to-end-firebase-template/actions/workflows/functions-deploy.yml)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
