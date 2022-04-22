@@ -1,1 +1,37 @@
-{ "kind": "identitytoolkit#DownloadAccountResponse", "users": [] }
+{
+  "kind": "identitytoolkit#DownloadAccountResponse",
+  "users": [
+    {
+      "localId": "203550611",
+      "createdAt": "1650655083482",
+      "lastLoginAt": "1650655083481",
+      "displayName": "avishai vaisman",
+      "emailVerified": false,
+      "phoneNumber": "+972532330515",
+      "email": "avishai@vaisman.com",
+      "salt": "fakeSalt4PRnJXQoJPjkBQfIHajl",
+      "passwordHash": "fakeHash:salt=fakeSalt4PRnJXQoJPjkBQfIHajl:password=ABCdef123!@#",
+      "passwordUpdatedAt": 1650655083482,
+      "validSince": "1650655083",
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "avishai@vaisman.com",
+          "federatedId": "avishai@vaisman.com",
+          "rawId": "avishai@vaisman.com",
+          "displayName": "avishai vaisman"
+        },
+        { "providerId": "phone", "federatedId": "+972532330515", "rawId": "+972532330515" }
+      ]
+    },
+    {
+      "localId": "M2TwclVqn4vRWQPMGstl1yRuAox1",
+      "createdAt": "1650647263449",
+      "lastLoginAt": "1650647263449",
+      "displayName": "undefined undefined",
+      "validSince": "1650653487",
+      "emailVerified": false,
+      "disabled": false
+    }
+  ]
+}

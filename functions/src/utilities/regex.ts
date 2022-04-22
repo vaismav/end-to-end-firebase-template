@@ -9,4 +9,4 @@ export const EMAIL_REGEX =
  */
 export const STRONG_PASSWORD_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/;
 
-export const ISRAEL_PHONE_NUMBERS_REGEX = /^\+?(972|0)(\-)?0?(([23489]{1}\d{7})|[5]{1}\d{8})$/;
+export const ISRAEL_PHONE_NUMBERS_REGEX = /^\+(972)(([23489]{1}\d{7})|[5]{1}\d{8})$/;
