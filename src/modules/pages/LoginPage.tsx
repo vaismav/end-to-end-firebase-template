@@ -36,7 +36,7 @@ const LoginPage = ({}): ReactElement => {
       .then((response) => {
         const uid = response.user.uid;
         alert('Welcome!');
-        navigate('/dashboard');
+        navigate('/home');
       })
       .catch((err) => {
         console.log(err);

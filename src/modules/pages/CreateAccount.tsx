@@ -17,7 +17,7 @@ const CreateAccount = ({}): ReactElement => {
   const identityNumber = useInput('identityNumber', 'Identity Number');
   const maritalStatus = useSelect('maritalStatus', 'Marital Status', maritalStatusOptions);
   const employmentStatus = useSelect('employmentStatus', 'Employment Status', employmentStatusOptions);
-  const homeAddress = useInput('homeAddress', 'Home Address', { defaultValue: 'shenkin 39' });
+  const homeAddress = useInput('homeAddress', 'Home Address');
   const email = useInput(
     'email',
     'Email',
@@ -72,7 +72,7 @@ const CreateAccount = ({}): ReactElement => {
     } else {
       httpCall('CreateAccount', data).then(() => {
         alert('Congrats, you have new account!');
-        navigate('/dashboard');
+        navigate('/home');
       });
     }
   };

@@ -57,7 +57,7 @@ export const createAccount = async (data: any, context: https.CallableContext) =
     }
   });
 
-  legacySystemBuildAccount(data)
+  return legacySystemBuildAccount(data)
     .then((response: AccountData) => {
       if (!response.accountID || !response.branchID) {
         log(`Error: createAccount: legacy system response missing account or branch `, response);
@@ -122,9 +122,10 @@ export const buildAccount = async (data: CreatAccountData & AccountData) => {
           branchID: data.branchID,
           balance: 0,
         })
-        .then(() => {
-          data.accountID, data.branchID;
-        });
+        .then(() => ({
+          accountID: data.accountID,
+          branchID: data.branchID,
+        }));
     })
     .catch((e) => {
       log('buildAccount: failed to create new user account', e);
