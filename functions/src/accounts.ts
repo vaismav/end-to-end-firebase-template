@@ -76,6 +76,59 @@ export const transfer = async (data: any, context: https.CallableContext) => {
   return 'success';
 };
 
+export const deposit = async (data: any, context: https.CallableContext) => {
+  if (!data?.amount || !data?.dstAccount || !data?.dstBranch || !data?.dstName) {
+    log('deposit: missing  amount, dstAccount, or dstBranch', data);
+    throw new HttpsError('failed-precondition', 'missing data');
+  }
+
+  const amount = parseInt(data?.amount);
+  const dstBranch = parseInt(data?.dstBranch);
+
+  if (!amount || amount <= 0 || !dstBranch) {
+    log('deposit: missing amount or dstBranch arent valid', data);
+    throw new HttpsError('failed-precondition', 'missing data');
+  }
+
+  checkAmlAta(data)
+    .then((isApproved) => {
+      console.log(`is approved ${isApproved}`);
+      if (isApproved) {
+        getDocRefOfUserAccount(data?.dstAccount)
+          .then((docRef) => updateAccountBalance(amount, docRef))
+          .catch((e) => {
+            console.log(e);
+            return null;
+          });
+      }
+    })
+    .catch((e) => {
+      log('transfer: checkAmlAta: Error', e);
+      throw new HttpsError('unknown', 'something went wrong');
+    });
+
+  return 'success';
+};
+
+const getDocRefOfUserAccount = async (
+  accountID: string,
+): Promise<FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>> => {
+  await db
+    .collection(`users`)
+    .get()
+    .then((usersSnapshot) => {
+      return usersSnapshot.docs.forEach((doc) => {
+        let userAccontRef = db.collection(`users/${doc.id}/accounts/${accountID}`);
+        userAccontRef.get().then((doc) => {
+          if (!doc.empty) {
+            return userAccontRef;
+          }
+        });
+      });
+    });
+  throw Error(`couldnt find account: ${accountID}`);
+};
+
 const updateAccountBalance = (
   amount: number,
   docRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,

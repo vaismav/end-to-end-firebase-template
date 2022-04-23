@@ -1,8 +1,7 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 import { httpCall } from 'cloud-utilities';
-import { useSelect } from 'modules/hooks/useSelect';
 import { useInput } from 'modules/hooks/useInput';
 import { areInputsValid, positiveNumber } from 'utilities/validators';
 import { Button } from '@material-ui/core';
@@ -60,7 +59,7 @@ const Deposit = ({}): ReactElement => {
           navigate('/deposit');
         })
         .catch((e) => {
-          console.log('error from Transfer http call', e);
+          console.log('error from Deposit http call', e);
           alert(`
         oops, it looks like something went wrong\n
         please try again later`);
