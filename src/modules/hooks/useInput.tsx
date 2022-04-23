@@ -9,7 +9,6 @@ const useInput = (id: string, lable: string, hookProps?: ExtraProps, otherProps?
   useEffect(() => {
     if (hookProps?.defaultValue) {
       setValue(hookProps.defaultValue);
-      console.log(`update ${id} to default ${hookProps.defaultValue}`);
     }
   });
 

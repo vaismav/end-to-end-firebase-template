@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import React, { Suspense, useEffect, useState } from 'react';
 import './App.css';
 import { httpCall } from './cloud-utilities';
-import { CreateAccount } from 'modules/createAccount/CreateAccount';
+import { BrowserRouter, Routes } from 'react-router-dom';
+import { SplashScreen } from 'modules/common/indexs';
+import RouterSwitch from 'router';
 
 function App() {
   const [text, setText] = useState<string>();
 
-  useEffect(() => {
-    httpCall('dashboard')
-      .then((result) => {
-        if (typeof result.data === 'string') {
-          setText(result.data);
-        }
-      })
-      .catch((e) => console.log(e));
-  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <CreateAccount />
-      </header>
+    <div className="App-header">
+      <Suspense fallback={<SplashScreen />}>
+        <BrowserRouter>
+          <RouterSwitch />
+        </BrowserRouter>
+      </Suspense>
     </div>
   );
 }
