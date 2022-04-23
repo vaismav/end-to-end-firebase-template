@@ -5,11 +5,7 @@ import { useSelect } from 'modules/hooks/useSelect';
 import { httpCall } from 'cloud-utilities';
 import { LooseObject } from 'modules/types';
 import { useNavigate } from 'react-router-dom';
-
-const emailValidation = (value: string): boolean =>
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-    value,
-  );
+import { emailValidation } from 'modules/validators';
 
 const toUseSelectOptions = (array: string[]) => array.map((v: string) => ({ value: v, label: v }));
 const maritalStatusOptions = toUseSelectOptions(['single', 'married', 'divorced']);

@@ -6,6 +6,7 @@ export default function RouterSwitch() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/newAccount" element={<CreateAccount />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
