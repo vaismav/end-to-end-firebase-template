@@ -8,7 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({}): ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const passwordField = useInput('password', 'Password');
+  const passwordField = useInput('password', 'Password', {
+    shouldHide: true,
+  });
   const emailField = useInput('email', 'Email', {
     validateOnChange: emailValidation,
   });

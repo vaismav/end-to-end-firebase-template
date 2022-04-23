@@ -29,19 +29,21 @@ const CreateAccount = ({}): ReactElement => {
     },
   );
   const phoneNumber = useInput('phoneNumber', 'Phone Number');
-  const password = useInput('password', 'Password');
+  const password = useInput('password', 'Password', {
+    shouldHide: true,
+  });
   const navigate = useNavigate();
 
   const inputFields = [
     firstName,
     lastName,
     identityNumber,
-    maritalStatus,
-    employmentStatus,
-    homeAddress,
     email,
     phoneNumber,
     password,
+    maritalStatus,
+    employmentStatus,
+    homeAddress,
   ];
 
   const sendRequest = () => {

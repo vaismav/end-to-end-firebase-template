@@ -1,7 +1,7 @@
 export type ExtraProps = {
   validateOnChange?: (value: any) => boolean;
   defaultValue?: string;
-  isHidden?: boolean;
+  shouldHide?: boolean;
 };
 
 export type SelectOption = {
