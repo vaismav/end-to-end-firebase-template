@@ -10,7 +10,7 @@ import { Button } from '@material-ui/core';
 const Transfer = ({}): ReactElement => {
   const [accountsData, setAccountsData] = useState<any[]>();
   const [accountBalance, setAccountBalance] = useState();
-  const selectAccount = useSelect('selectAccount', 'Select Account');
+  const selectAccount = useSelect('srcAccount', 'Select Account');
   const amountField = useInput(
     'amount',
     'Amount',

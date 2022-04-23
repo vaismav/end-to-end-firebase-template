@@ -5,7 +5,7 @@ import { AccountData } from './utilities/types';
 import fetch from 'cross-fetch';
 
 const productionURL = 'https://europe-west1-template-6fa33.cloudfunctions.net/';
-const localhost = 'http://localhost:5001/template-6fa33/europe-west1/';
+const localhost = true && 'http://localhost:5001/template-6fa33/europe-west1/';
 
 const callCloudFunction = async (functionName: string, data: {} = {}) => {
   let url = localhost ? localhost + functionName : productionURL + functionName;
@@ -18,7 +18,7 @@ const callCloudFunction = async (functionName: string, data: {} = {}) => {
   });
 };
 
-const builtSuccessfully = () => true && getRandomInt(8);
+const finishedSuccessfully = () => true && getRandomInt(8);
 
 const isAccountDataResponse = (data: any): data is { result: AccountData } => {
   return data?.result?.accountID && data?.result?.branchID;
@@ -49,12 +49,42 @@ export const legacySystemBuildAccount = async (accountData: any): Promise<Accoun
       }
     });
 
+export const legacySystemAML = async (data: any): Promise<boolean> =>
+  callCloudFunction('AML', data)
+    .then((response) => {
+      if (response.status >= 400) {
+        log(`legacySystemAML: bad response status`, response);
+        throw Error(`legacySystemAML: bad response status`);
+      }
+      return response.json();
+    })
+    .then((data) => data?.result);
+
+export const legacySystemATA = async (data: any): Promise<boolean> =>
+  callCloudFunction('ATA', data)
+    .then((response) => {
+      if (response.status >= 400) {
+        log(`legacySystemATA: bad response status`, response);
+        throw Error(`legacySystemATA: bad response status`);
+      }
+      return response.json();
+    })
+    .then((data) => data?.result);
+
 export const buildAccount = (data: any, context: https.CallableContext) => {
-  if (builtSuccessfully()) {
+  if (finishedSuccessfully()) {
     return {
       accountID: getRandomInt(99999),
       branchID: 10,
     };
   }
   throw new HttpsError('cancelled', "Legacy System couldn't build the account");
+};
+
+export const amlService = (data: any, context: https.CallableContext) => {
+  return finishedSuccessfully();
+};
+
+export const ataService = (data: any, context: https.CallableContext) => {
+  return finishedSuccessfully();
 };
