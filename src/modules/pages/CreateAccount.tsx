@@ -5,7 +5,7 @@ import { useSelect } from 'modules/hooks/useSelect';
 import { httpCall } from 'cloud-utilities';
 import { LooseObject } from 'modules/types';
 import { useNavigate } from 'react-router-dom';
-import { emailValidation } from 'modules/validators';
+import { emailValidation } from 'utilities/validators';
 
 const toUseSelectOptions = (array: string[]) => array.map((v: string) => ({ value: v, label: v }));
 const maritalStatusOptions = toUseSelectOptions(['single', 'married', 'divorced']);

@@ -5,15 +5,16 @@ import { SelectOption, ExtraProps } from './types';
 const useSelect = (
   id: string,
   lable: string,
-  options: SelectOption[],
+  options: SelectOption[] = [],
   hookProps?: ExtraProps,
   otherProps?: TextFieldProps,
 ) => {
+  const [selectOptions, setSelectOptions] = useState<SelectOption[]>(options);
   const [value, setValue] = useState<string>(hookProps?.defaultValue ? hookProps.defaultValue : '');
   const [isValid, setIsValid] = useState<boolean>(true);
 
   useEffect(() => {
-    if (options.map((o) => o.value).includes(value)) {
+    if (selectOptions.map((o) => o.value).includes(value)) {
       setIsValid(true);
     }
   }, [value]);
@@ -23,6 +24,8 @@ const useSelect = (
   };
 
   const onInputError = () => setIsValid(false);
+
+  const updateOptions = (newOptions: SelectOption[]) => setSelectOptions(newOptions);
 
   const element = (
     <TextField
@@ -42,7 +45,7 @@ const useSelect = (
       <option value="DEFAULT" disabled>
         Choose option...
       </option>
-      {options.map((option) => (
+      {selectOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>
@@ -50,7 +53,7 @@ const useSelect = (
     </TextField>
   );
 
-  return { value, element, isValid, onInputError, id };
+  return { value, element, isValid, onInputError, id, updateOptions };
 };
 
 export { useSelect };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { PageNotFound, CreateAccount, LoginPage, Home } from 'modules/pages';
+import { PageNotFound, CreateAccount, LoginPage, Home, Transfer } from 'modules/pages';
 
 export default function RouterSwitch() {
   return (
@@ -9,6 +9,7 @@ export default function RouterSwitch() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/newAccount" element={<CreateAccount />} />
+      <Route path="/transfer" element={<Transfer />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

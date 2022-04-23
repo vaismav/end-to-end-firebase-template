@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { useInput } from 'modules/hooks/useInput';
 import { Button, FormControl } from '@material-ui/core';
 import { Stack } from '@mui/material';
-import { emailValidation } from 'modules/validators';
+import { emailValidation } from 'utilities/validators';
 import { signInWithEmail } from 'cloud-utilities';
 import { useNavigate } from 'react-router-dom';
 
