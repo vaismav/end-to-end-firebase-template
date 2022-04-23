@@ -62,6 +62,7 @@ export const transfer = async (data: any, context: https.CallableContext) => {
 
   checkAmlAta(data)
     .then((isApproved) => {
+      console.log(`is approved ${isApproved}`);
       if (isApproved) {
         let docRef = db.doc(`/users/${context?.auth?.uid}/accounts/${data.srcAccount}`);
         updateAccountBalance(-1 * amount, docRef);

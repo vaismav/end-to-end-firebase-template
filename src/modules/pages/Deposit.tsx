@@ -7,10 +7,7 @@ import { useInput } from 'modules/hooks/useInput';
 import { areInputsValid, positiveNumber } from 'utilities/validators';
 import { Button } from '@material-ui/core';
 
-const Transfer = ({}): ReactElement => {
-  const [accountsData, setAccountsData] = useState<any[]>();
-  const [accountBalance, setAccountBalance] = useState();
-  const srcAccount = useSelect('srcAccount', 'Select Account');
+const Deposit = ({}): ReactElement => {
   const amountField = useInput(
     'amount',
     'Amount',
@@ -47,52 +44,21 @@ const Transfer = ({}): ReactElement => {
       },
     },
   );
-  const dstName = useInput('dstName', "Recipient's name");
   const navigate = useNavigate();
 
-  const dstFields = [amountField, dstAccountField, dstAccountBranchField, dstName];
-
-  useEffect(() => {
-    httpCall('AccountsInfo')
-      .then((res: any) => {
-        if (res.data) {
-          setAccountsData(res.data);
-        }
-      })
-      .catch((e) => console.log('Error: Home: AccountsInfo', e));
-  }, []);
-
-  useEffect(() => {
-    if (accountsData) {
-      srcAccount.updateOptions(
-        accountsData.map((account) => ({
-          value: account.accountID,
-          label: account.accountID,
-        })),
-      );
-    }
-  }, [accountsData]);
-
-  useEffect(() => {
-    if (srcAccount?.value && accountsData) {
-      accountsData.forEach((account) => {
-        if (account.accountID === srcAccount.value) {
-          setAccountBalance(account.balance);
-        }
-      });
-    }
-  }, [srcAccount?.value]);
+  const dstFields = [amountField, dstAccountField, dstAccountBranchField];
 
   const handleSubmit = () => {
-    if (areInputsValid([srcAccount, ...dstFields])) {
-      httpCall('Transfer', {
-        srcAccount: srcAccount.value,
+    if (areInputsValid(dstFields)) {
+      httpCall('Deposit', {
         amount: amountField.value,
         dstAccount: dstAccountField.value,
         dstBranch: dstAccountBranchField.value,
-        dstName: dstName.value,
       })
-        .then(() => navigate('/home'))
+        .then(() => {
+          alert('deposit request sent successfully');
+          navigate('/deposit');
+        })
         .catch((e) => {
           console.log('error from Transfer http call', e);
           alert(`
@@ -104,9 +70,7 @@ const Transfer = ({}): ReactElement => {
 
   return (
     <Stack spacing={2}>
-      <h2> Make Transaction </h2>
-      {srcAccount.element}
-      {(accountBalance || accountBalance === 0) && `Account balance: ${accountBalance}`}
+      <h2> Deposit Simulator </h2>
       {dstFields.map((field) => (
         <div key={field.id}>{field.element}</div>
       ))}
@@ -117,4 +81,4 @@ const Transfer = ({}): ReactElement => {
   );
 };
 
-export { Transfer };
+export { Deposit };
