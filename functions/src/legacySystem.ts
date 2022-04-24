@@ -6,7 +6,7 @@ import fetch from 'cross-fetch';
 import { produceMessage } from './kafka';
 
 const productionURL = 'https://europe-west1-template-6fa33.cloudfunctions.net/';
-const localhost = true && 'http://localhost:5001/template-6fa33/europe-west1/';
+const localhost = false && 'http://localhost:5001/template-6fa33/europe-west1/';
 
 const callCloudFunction = async (functionName: string, data: {} = {}) => {
   let url = localhost ? localhost + functionName : productionURL + functionName;
