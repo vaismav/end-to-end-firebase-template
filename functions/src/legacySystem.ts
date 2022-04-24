@@ -3,6 +3,7 @@ import { HttpsError } from 'firebase-functions/v1/https';
 import { getRandomInt, log } from './utilities';
 import { AccountData } from './utilities/types';
 import fetch from 'cross-fetch';
+import { produceMessage } from './kafka';
 
 const productionURL = 'https://europe-west1-template-6fa33.cloudfunctions.net/';
 const localhost = true && 'http://localhost:5001/template-6fa33/europe-west1/';
@@ -71,6 +72,8 @@ export const legacySystemATA = async (data: any): Promise<boolean> =>
     })
     .then((data) => data?.result);
 
+export const legacySystemAnomaly = async (data: any): Promise<Response> => callCloudFunction('Anomaly', data);
+
 export const buildAccount = (data: any, context: https.CallableContext) => {
   if (finishedSuccessfully()) {
     return {
@@ -87,4 +90,9 @@ export const amlService = (data: any, context: https.CallableContext) => {
 
 export const ataService = (data: any, context: https.CallableContext) => {
   return finishedSuccessfully();
+};
+
+export const anomalyService = (data: any, context: https.CallableContext) => {
+  let AnomalyResult = finishedSuccessfully();
+  produceMessage(data?.dstAccount || 'unknown', { AnomalyResult, ...data });
 };

@@ -7,8 +7,10 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "baseUrl": "functions/src"
+    "baseUrl": "functions/src",
+    "allowJs": true
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

@@ -2,7 +2,7 @@ import { https } from 'firebase-functions/v1';
 import { HttpsError } from 'firebase-functions/v1/https';
 import { db } from './firebase';
 import { log } from './utilities';
-import { legacySystemAML, legacySystemATA } from './legacySystem';
+import { legacySystemAML, legacySystemAnomaly, legacySystemATA } from './legacySystem';
 
 export const accountsInfo = async (data: any, context: https.CallableContext) => {
   if (!context?.auth?.uid) {
@@ -60,7 +60,7 @@ export const transfer = async (data: any, context: https.CallableContext) => {
     throw new HttpsError('failed-precondition', 'missing data');
   }
 
-  checkAmlAta(data)
+  transactionChecks(data)
     .then((isApproved) => {
       console.log(`is approved ${isApproved}`);
       if (isApproved) {
@@ -69,7 +69,7 @@ export const transfer = async (data: any, context: https.CallableContext) => {
       }
     })
     .catch((e) => {
-      log('transfer: checkAmlAta: Error', e);
+      log('transfer: transactionChecks: Error', e);
       throw new HttpsError('unknown', 'something went wrong');
     });
 
@@ -77,7 +77,7 @@ export const transfer = async (data: any, context: https.CallableContext) => {
 };
 
 export const deposit = async (data: any, context: https.CallableContext) => {
-  if (!data?.amount || !data?.dstAccount || !data?.dstBranch || !data?.dstName) {
+  if (!data?.amount || !data?.dstAccount || !data?.dstBranch) {
     log('deposit: missing  amount, dstAccount, or dstBranch', data);
     throw new HttpsError('failed-precondition', 'missing data');
   }
@@ -90,7 +90,7 @@ export const deposit = async (data: any, context: https.CallableContext) => {
     throw new HttpsError('failed-precondition', 'missing data');
   }
 
-  checkAmlAta(data)
+  transactionChecks(data)
     .then((isApproved) => {
       console.log(`is approved ${isApproved}`);
       if (isApproved) {
@@ -103,7 +103,7 @@ export const deposit = async (data: any, context: https.CallableContext) => {
       }
     })
     .catch((e) => {
-      log('transfer: checkAmlAta: Error', e);
+      log('transfer: transactionChecks: Error', e);
       throw new HttpsError('unknown', 'something went wrong');
     });
 
@@ -113,20 +113,29 @@ export const deposit = async (data: any, context: https.CallableContext) => {
 const getDocRefOfUserAccount = async (
   accountID: string,
 ): Promise<FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>> => {
-  await db
+  return db
     .collection(`users`)
     .get()
-    .then((usersSnapshot) => {
-      return usersSnapshot.docs.forEach((doc) => {
-        let userAccontRef = db.collection(`users/${doc.id}/accounts/${accountID}`);
-        userAccontRef.get().then((doc) => {
-          if (!doc.empty) {
-            return userAccontRef;
+    .then(async (usersSnapshot) => {
+      await usersSnapshot.docs.forEach(async (doc) => {
+        let userAccountRef = db.doc(`users/${doc.id}/accounts/${accountID}`);
+        await userAccountRef.get().then((doc) => {
+          console.log(`search for account ${accountID}. doc ${doc.ref.path}`);
+          if (doc.exists) {
+            console.log(`found account ${accountID}. doc ${doc.ref.path}`);
+            return userAccountRef;
           }
         });
       });
+
+      return undefined;
+    })
+    .then((ref) => {
+      if (!ref) {
+        throw Error(`couldnt find account: ${accountID}`);
+      }
+      return ref;
     });
-  throw Error(`couldnt find account: ${accountID}`);
 };
 
 const updateAccountBalance = (
@@ -138,21 +147,31 @@ const updateAccountBalance = (
     throw Error('amount or docRef are invalid');
   }
 
-  return db.runTransaction((transaction) => {
-    return transaction.get(docRef).then((accountDoc) => {
-      if (!accountDoc.exists) {
-        throw Error('Document does not exist!');
-      }
+  return db
+    .runTransaction((transaction) => {
+      return transaction.get(docRef).then((accountDoc) => {
+        if (!accountDoc.exists) {
+          throw Error('Document does not exist!');
+        }
 
-      const currentBalance = accountDoc.data()?.balance || 0;
+        const currentBalance = accountDoc.data()?.balance || 0;
 
-      transaction.update(docRef, { balance: currentBalance + amount });
+        transaction.update(docRef, { balance: currentBalance + amount });
+        log('updateAccountBalance: made transaction');
+        return true;
+      });
+    })
+    .catch((e) => {
+      log(`updateAccountBalance: transaction failed ${e} `, e);
+      throw Error('transaction failed');
     });
-  });
 };
 
-const checkAmlAta = async (data: any): Promise<boolean> => {
+const transactionChecks = async (data: any): Promise<boolean> => {
   const checks: Promise<boolean>[] = [legacySystemAML(data), legacySystemATA(data)];
+  legacySystemAnomaly(data).catch((e) => {
+    console.log('Anomaly gcf request failed', e);
+  });
 
   return Promise.all(checks).then((responses) => responses.reduce((acc, curr) => acc && curr, true));
 };

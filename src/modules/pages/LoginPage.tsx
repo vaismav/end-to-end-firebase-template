@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { useInput } from 'modules/hooks/useInput';
-import { Button, FormControl } from '@material-ui/core';
+import { Button, FormControl, Link } from '@material-ui/core';
 import { Stack } from '@mui/material';
 import { emailValidation } from 'utilities/validators';
 import { signInWithEmail } from 'cloud-utilities';
@@ -56,6 +56,9 @@ const LoginPage = ({}): ReactElement => {
       <Button variant="contained" onClick={handleSubmit}>
         yalla
       </Button>
+      <Link onClick={() => navigate('/newAccount')} variant="body2">
+        create new account
+      </Link>
     </>
   );
 };
