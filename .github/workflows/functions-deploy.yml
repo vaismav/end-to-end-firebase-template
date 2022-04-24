@@ -13,8 +13,8 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
-    name: Build
+  install:
+    name: install
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,14 +36,10 @@ jobs:
         cd functions
         npm ci
 
-    - name: Build
-      run: |
-        cd functions
-        npm run build
   
   deploy:
     name: Deploy
-    needs: build
+    needs: install
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
@@ -52,8 +48,8 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install TSC
-      run: npm install -g typescript
+    - name: cd functions
+      run: cd functions
     # Deploying the functions to firebase
     - name:  Deploy to Firebase
       uses: w9jds/firebase-action@master
