@@ -125,13 +125,7 @@ const getDocRefOfUserAccount = async (
       await db
         .doc(`users/${uid}/accounts/${accountID}`)
         .get()
-        .then((doc) => {
-          console.log(`search for account ${accountID}. doc ${doc.ref.path}`);
-          if (doc.exists) {
-            console.log(`found account ${accountID}. doc ${doc.ref.path}`);
-          }
-          return doc.exists;
-        }),
+        .then((doc) => doc.exists),
   );
 
   if (refs.length > 0) {
