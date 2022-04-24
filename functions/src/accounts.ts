@@ -113,29 +113,32 @@ export const deposit = async (data: any, context: https.CallableContext) => {
 const getDocRefOfUserAccount = async (
   accountID: string,
 ): Promise<FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>> => {
-  return db
+  let usersIDsPromises = await db
     .collection(`users`)
     .get()
-    .then(async (usersSnapshot) => {
-      await usersSnapshot.docs.forEach(async (doc) => {
-        let userAccountRef = db.doc(`users/${doc.id}/accounts/${accountID}`);
-        await userAccountRef.get().then((doc) => {
+    .then(async (usersSnapshot) => usersSnapshot.docs.map(async (doc) => doc.id));
+
+  let usersIDs = await Promise.all(usersIDsPromises);
+
+  let refs = usersIDs.filter(
+    async (uid) =>
+      await db
+        .doc(`users/${uid}/accounts/${accountID}`)
+        .get()
+        .then((doc) => {
           console.log(`search for account ${accountID}. doc ${doc.ref.path}`);
           if (doc.exists) {
             console.log(`found account ${accountID}. doc ${doc.ref.path}`);
-            return userAccountRef;
           }
-        });
-      });
+          return doc.exists;
+        }),
+  );
 
-      return undefined;
-    })
-    .then((ref) => {
-      if (!ref) {
-        throw Error(`couldnt find account: ${accountID}`);
-      }
-      return ref;
-    });
+  if (refs.length > 0) {
+    return db.doc(`users/${refs[0]}/accounts/${accountID}`);
+  }
+
+  throw Error(`couldnt find account: ${accountID}`);
 };
 
 const updateAccountBalance = (
