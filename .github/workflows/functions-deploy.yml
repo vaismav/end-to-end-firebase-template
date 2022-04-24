@@ -23,12 +23,18 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: Install TSC
+      run: npm install -g typescript
+
     # Runs a single command using the runners shell
     # And of course we need to goto our functions folder to deploy
     - name: Install npm packages
       run: |
         cd functions
         npm ci
+
+    - name: Build
+      run: |
         npm run build
   
   deploy:
