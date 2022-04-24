@@ -91,7 +91,6 @@ const CreateAccount = ({}): ReactElement => {
       <Button variant="contained" onClick={sendRequest}>
         yalla
       </Button>
-      {inputFields.map((f) => '| ' + f.value + ' ')}
     </>
   );
 };
