@@ -3,16 +3,12 @@
   "users": [
     {
       "localId": "203550611",
-      "createdAt": "1650655083482",
-      "lastLoginAt": "1650655083481",
+      "createdAt": "1650655510668",
+      "lastLoginAt": "1650655510667",
       "displayName": "avishai vaisman",
-      "emailVerified": false,
-      "phoneNumber": "+972532330515",
-      "email": "avishai@vaisman.com",
-      "salt": "fakeSalt4PRnJXQoJPjkBQfIHajl",
-      "passwordHash": "fakeHash:salt=fakeSalt4PRnJXQoJPjkBQfIHajl:password=ABCdef123!@#",
-      "passwordUpdatedAt": 1650655083482,
-      "validSince": "1650655083",
+      "passwordHash": "fakeHash:salt=fakeSaltCIhf9YRyH6XSP89inWs4:password=ABCdef123!@#",
+      "salt": "fakeSaltCIhf9YRyH6XSP89inWs4",
+      "passwordUpdatedAt": 1650762168120,
       "providerUserInfo": [
         {
           "providerId": "password",
@@ -22,14 +18,34 @@
           "displayName": "avishai vaisman"
         },
         { "providerId": "phone", "federatedId": "+972532330515", "rawId": "+972532330515" }
-      ]
+      ],
+      "phoneNumber": "+972532330515",
+      "validSince": "1650762168",
+      "email": "avishai@vaisman.com",
+      "emailVerified": false,
+      "disabled": false
     },
     {
-      "localId": "M2TwclVqn4vRWQPMGstl1yRuAox1",
-      "createdAt": "1650647263449",
-      "lastLoginAt": "1650647263449",
-      "displayName": "undefined undefined",
-      "validSince": "1650653487",
+      "localId": "394005933",
+      "createdAt": "1650704946248",
+      "lastLoginAt": "1650704946248",
+      "displayName": "sad asd",
+      "passwordHash": "fakeHash:salt=fakeSaltawuLQ9GEZ9nguLRZaHwG:password=abcWER123!@#",
+      "salt": "fakeSaltawuLQ9GEZ9nguLRZaHwG",
+      "passwordUpdatedAt": 1650762168121,
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "sfda@asdf.asd",
+          "federatedId": "sfda@asdf.asd",
+          "rawId": "sfda@asdf.asd",
+          "displayName": "sad asd"
+        },
+        { "providerId": "phone", "federatedId": "+972532330415", "rawId": "+972532330415" }
+      ],
+      "phoneNumber": "+972532330415",
+      "validSince": "1650762168",
+      "email": "sfda@asdf.asd",
       "emailVerified": false,
       "disabled": false
     }

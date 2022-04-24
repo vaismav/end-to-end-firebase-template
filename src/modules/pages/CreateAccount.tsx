@@ -1,57 +1,55 @@
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { useInput } from 'modules/hooks/useInput';
-import { Button, FormControl, Grid } from '@material-ui/core';
+import { Button, Dialog, FormControl, Grid } from '@material-ui/core';
 import { useSelect } from 'modules/hooks/useSelect';
-import { getValue } from '@testing-library/user-event/dist/utils';
 import { httpCall } from 'cloud-utilities';
 import { LooseObject } from 'modules/types';
-
-const emailValidation = (value: string): boolean =>
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-    value,
-  );
+import { useNavigate } from 'react-router-dom';
+import { emailValidation } from 'utilities/validators';
 
 const toUseSelectOptions = (array: string[]) => array.map((v: string) => ({ value: v, label: v }));
 const maritalStatusOptions = toUseSelectOptions(['single', 'married', 'divorced']);
 const employmentStatusOptions = toUseSelectOptions(['employed', 'unemployed', 'retired']);
 
 const CreateAccount = ({}): ReactElement => {
-  const firstName = useInput('firstName', 'First Name', { defaultValue: 'avishai' });
-  const lastName = useInput('lastName', 'Last Name', { defaultValue: 'vaisman' });
-  const identityNumber = useInput('identityNumber', 'Identity Number', { defaultValue: '203550611' });
-  const maritalStatus = useSelect('maritalStatus', 'Marital Status', maritalStatusOptions, { defaultValue: 'single' });
-  const employmentStatus = useSelect('employmentStatus', 'Employment Status', employmentStatusOptions, {
-    defaultValue: 'employed',
-  });
-  const homeAddress = useInput('homeAddress', 'Home Address', { defaultValue: 'shenkin 39' });
+  const firstName = useInput('firstName', 'First Name');
+  const lastName = useInput('lastName', 'Last Name');
+  const identityNumber = useInput('identityNumber', 'Identity Number');
+  const maritalStatus = useSelect('maritalStatus', 'Marital Status', maritalStatusOptions);
+  const employmentStatus = useSelect('employmentStatus', 'Employment Status', employmentStatusOptions);
+  const homeAddress = useInput('homeAddress', 'Home Address');
   const email = useInput(
     'email',
     'Email',
     {
       validateOnChange: emailValidation,
-      defaultValue: 'avishai@vaisman.com',
     },
     {
       required: true,
     },
   );
-  const phoneNumber = useInput('phoneNumber', 'Phone Number', { defaultValue: '0532330515' });
-  const password = useInput('password', 'Password', { defaultValue: 'ABCdef123!@#' });
+  const phoneNumber = useInput('phoneNumber', 'Phone Number');
+  const password = useInput('password', 'Password', {
+    shouldHide: true,
+  });
+  const navigate = useNavigate();
 
   const inputFields = [
     firstName,
     lastName,
     identityNumber,
-    maritalStatus,
-    employmentStatus,
-    homeAddress,
     email,
     phoneNumber,
     password,
+    maritalStatus,
+    employmentStatus,
+    homeAddress,
   ];
 
   const sendRequest = () => {
     let data: LooseObject = {};
+    let missingData: string[] = [];
+    let invalidData: string[] = [];
     inputFields.forEach((field) => {
       switch (field.id) {
         case 'phoneNumber':
@@ -60,8 +58,23 @@ const CreateAccount = ({}): ReactElement => {
         default:
           data[field.id] = field.value;
       }
+      if (!field.isValid) {
+        invalidData.push(field.id);
+      } else if (field.value === '') {
+        missingData.push(field.id);
+      }
     });
-    httpCall('CreateAccount', data);
+    if (missingData.length || invalidData.length) {
+      alert(
+        (missingData.length ? `Missing data fields ${missingData}\n` : '') +
+          (invalidData.length ? `invalid data fields ${invalidData}` : ''),
+      );
+    } else {
+      httpCall('CreateAccount', data).then(() => {
+        alert('Congrats, you have new account!');
+        navigate('/home');
+      });
+    }
   };
 
   return (
