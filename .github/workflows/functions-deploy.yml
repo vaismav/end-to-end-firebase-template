@@ -38,6 +38,7 @@ jobs:
 
     - name: Build
       run: |
+        cd functions
         npm run build
   
   deploy:
